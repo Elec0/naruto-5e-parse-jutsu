@@ -50,18 +50,28 @@ def run():
     # All water jutsu are tagged with "Water Release"
     # Fire is missing 'release' from some
 
-    # keyword_set = OrderedDict()
-    # water_jutsu = []
-    # for j in jutsu_list:
-    #     for k in j.keywords:
-    #         keyword_set[k] = 1
-    #         if "fire" in k.lower():
-    #             water_jutsu.append(j)
-    #             break
-    #
     print(f"Keywords: {' | '.join(jutsu_dict['keywords'])}")
 
-    # print(f"Filtered Jutsu: {len(water_jutsu)}")
+    print(f"Keyword Jutsu Breakdown")
+    for keyword in jutsu_dict["keywords"]:
+        print(f"{keyword}: {len(filter_keyword(jutsu_dict['list'], keyword))}")
+
+
+def filter_keyword(jutsu_list: list[Jutsu], keyword: str) -> list[Jutsu]:
+    """
+    Filter a list of jutsu by a keyword
+    :param jutsu_list:
+    :param keyword: What substring to search for
+    :return: A list of jutsu that contain the keyword
+    """
+    filtered_list = []
+    for j in jutsu_list:
+        for k in j.keywords:
+            if keyword.lower() in k.lower():
+                filtered_list.append(j)
+                break
+
+    return filtered_list
 
 
 if __name__ == "__main__":
