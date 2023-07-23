@@ -1,0 +1,119 @@
+{
+  "name": "Psionics False Future [C]",
+  "type": "spell",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "description": {
+      "value": "<p>Keywords: Genjutsu, Visual, Unaware</p>\n<p>You attempt to force a vision of a false future onto a target, causing them to make a poorly informed decision.</p>\n<p>Select one hostile creature you can see within range, forcing them to make an Intelligence saving throw.</p>\n<p>Critical Success: Affected creature is able to resist this jutsu’s effect, becoming immune to further castings of this jutsu for the next 10 minutes.</p>\n<p>Success: Affected creature is able to resist this jutsu’s effects.</p>\n<p>Failure: The hostile creature must spend its reaction, to move no less than 30 feet, if it can, into a space it would move into if its turn were right now.</p>\n<p>Critical Failure: Same as failure, but its movement speed it reduced by half after its movement ends, until the end of its next turn.</p>\n<p>At Higher Ranks: For each rank you cast this jutsu above D-Rank, increase the cost of this jutsu by 3 and the number of creatures this can target by +1.</p>",
+      "chat": "",
+      "unidentified": ""
+    },
+    "source": "",
+    "activation": {
+      "type": "action",
+      "cost": 1,
+      "condition": ""
+    },
+    "duration": {
+      "value": None,
+      "units": "inst"
+    },
+    "target": {
+      "value": 2,
+      "width": None,
+      "units": "",
+      "type": "creature"
+    },
+    "range": {
+      "value": 60,
+      "long": None,
+      "units": "ft"
+    },
+    "uses": {
+      "value": None,
+      "max": "",
+      "per": ""
+    },
+    "consume": {
+      "type": "",
+      "target": "",
+      "amount": 8
+    },
+    "ability": "",
+    "actionType": "save",
+    "attackBonus": 0,
+    "chatFlavor": "",
+    "critical": {
+      "threshold": None,
+      "damage": ""
+    },
+    "damage": {
+      "parts": [],
+      "versatile": ""
+    },
+    "formula": "",
+    "save": {
+      "ability": "int",
+      "dc": None,
+      "scaling": "wis"
+    },
+    "level": 7,
+    "school": "div",
+    "components": {
+      "value": "",
+      "vocal": False,
+      "somatic": False,
+      "material": False,
+      "chakraseals": False,
+      "handseals": True,
+      "mobility": False,
+      "molding": True,
+      "weapon": False,
+      "ninjatool": False,
+      "medical": False,
+      "fuinjutsu": False,
+      "sensory": False,
+      "clash": False,
+      "ritual": False,
+      "concentration": False
+    },
+    "materials": {
+      "value": "",
+      "consumed": False,
+      "cost": 0,
+      "supply": 0
+    },
+    "preparation": {
+      "mode": "prepared",
+      "prepared": True
+    },
+    "scaling": {
+      "mode": "none",
+      "formula": ""
+    }
+  },
+  "effects": [],
+  "flags": {
+    "core": {
+      "sourceId": "Item.XXDbVcWk7x4HFrug"
+    },
+    "cf": {
+      "id": "temp_obdf6uigai"
+    }
+  },
+  "_stats": {
+    "systemId": "n5e",
+    "systemVersion": "0.6.3",
+    "coreVersion": "10.291",
+    "createdTime": 1675000627577,
+    "modifiedTime": 1675000833347,
+    "lastModifiedBy": "Cn2kMSNkjbLHNimG"
+  },
+  "folder": None,
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "Cn2kMSNkjbLHNimG": 3
+  },
+  "_id": "00SGfiembBkB5Kiq"
+}

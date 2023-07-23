@@ -1,0 +1,478 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "img": {
+      "type": "string"
+    },
+    "system": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "chat": {
+              "type": "string"
+            },
+            "unidentified": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "chat",
+            "unidentified"
+          ]
+        },
+        "source": {
+          "type": "string"
+        },
+        "activation": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "cost": {
+              "type": "integer"
+            },
+            "condition": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "cost",
+            "condition"
+          ]
+        },
+        "duration": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "null"
+            },
+            "units": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "units"
+          ]
+        },
+        "target": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "integer"
+            },
+            "width": {
+              "type": "null"
+            },
+            "units": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "width",
+            "units",
+            "type"
+          ]
+        },
+        "range": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "integer"
+            },
+            "long": {
+              "type": "null"
+            },
+            "units": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "long",
+            "units"
+          ]
+        },
+        "uses": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "null"
+            },
+            "max": {
+              "type": "string"
+            },
+            "per": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "max",
+            "per"
+          ]
+        },
+        "consume": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "target": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "target",
+            "amount"
+          ]
+        },
+        "ability": {
+          "type": "string"
+        },
+        "actionType": {
+          "type": "string"
+        },
+        "attackBonus": {
+          "type": "integer"
+        },
+        "chatFlavor": {
+          "type": "string"
+        },
+        "critical": {
+          "type": "object",
+          "properties": {
+            "threshold": {
+              "type": "null"
+            },
+            "damage": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "threshold",
+            "damage"
+          ]
+        },
+        "damage": {
+          "type": "object",
+          "properties": {
+            "parts": {
+              "type": "array",
+              "items": {}
+            },
+            "versatile": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "parts",
+            "versatile"
+          ]
+        },
+        "formula": {
+          "type": "string"
+        },
+        "save": {
+          "type": "object",
+          "properties": {
+            "ability": {
+              "type": "string"
+            },
+            "dc": {
+              "type": "null"
+            },
+            "scaling": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ability",
+            "dc",
+            "scaling"
+          ]
+        },
+        "level": {
+          "type": "integer"
+        },
+        "school": {
+          "type": "string"
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "vocal": {
+              "type": "boolean"
+            },
+            "somatic": {
+              "type": "boolean"
+            },
+            "material": {
+              "type": "boolean"
+            },
+            "chakraseals": {
+              "type": "boolean"
+            },
+            "handseals": {
+              "type": "boolean"
+            },
+            "mobility": {
+              "type": "boolean"
+            },
+            "molding": {
+              "type": "boolean"
+            },
+            "weapon": {
+              "type": "boolean"
+            },
+            "ninjatool": {
+              "type": "boolean"
+            },
+            "medical": {
+              "type": "boolean"
+            },
+            "fuinjutsu": {
+              "type": "boolean"
+            },
+            "sensory": {
+              "type": "boolean"
+            },
+            "clash": {
+              "type": "boolean"
+            },
+            "ritual": {
+              "type": "boolean"
+            },
+            "concentration": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "value",
+            "vocal",
+            "somatic",
+            "material",
+            "chakraseals",
+            "handseals",
+            "mobility",
+            "molding",
+            "weapon",
+            "ninjatool",
+            "medical",
+            "fuinjutsu",
+            "sensory",
+            "clash",
+            "ritual",
+            "concentration"
+          ]
+        },
+        "materials": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "consumed": {
+              "type": "boolean"
+            },
+            "cost": {
+              "type": "integer"
+            },
+            "supply": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "value",
+            "consumed",
+            "cost",
+            "supply"
+          ]
+        },
+        "preparation": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string"
+            },
+            "prepared": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "mode",
+            "prepared"
+          ]
+        },
+        "scaling": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string"
+            },
+            "formula": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode",
+            "formula"
+          ]
+        }
+      },
+      "required": [
+        "description",
+        "source",
+        "activation",
+        "duration",
+        "target",
+        "range",
+        "uses",
+        "consume",
+        "ability",
+        "actionType",
+        "attackBonus",
+        "chatFlavor",
+        "critical",
+        "damage",
+        "formula",
+        "save",
+        "level",
+        "school",
+        "components",
+        "materials",
+        "preparation",
+        "scaling"
+      ]
+    },
+    "effects": {
+      "type": "array",
+      "items": {}
+    },
+    "flags": {
+      "type": "object",
+      "properties": {
+        "core": {
+          "type": "object",
+          "properties": {
+            "sourceId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "sourceId"
+          ]
+        },
+        "cf": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      },
+      "required": [
+        "core",
+        "cf"
+      ]
+    },
+    "_stats": {
+      "type": "object",
+      "properties": {
+        "systemId": {
+          "type": "string"
+        },
+        "systemVersion": {
+          "type": "string"
+        },
+        "coreVersion": {
+          "type": "string"
+        },
+        "createdTime": {
+          "type": "integer"
+        },
+        "modifiedTime": {
+          "type": "integer"
+        },
+        "lastModifiedBy": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "systemId",
+        "systemVersion",
+        "coreVersion",
+        "createdTime",
+        "modifiedTime",
+        "lastModifiedBy"
+      ]
+    },
+    "folder": {
+      "type": "null"
+    },
+    "sort": {
+      "type": "integer"
+    },
+    "ownership": {
+      "type": "object",
+      "properties": {
+        "default": {
+          "type": "integer"
+        },
+        "Cn2kMSNkjbLHNimG": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "default",
+        "Cn2kMSNkjbLHNimG"
+      ]
+    },
+    "_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "img",
+    "system",
+    "effects",
+    "flags",
+    "_stats",
+    "folder",
+    "sort",
+    "ownership",
+    "_id"
+  ]
+}
