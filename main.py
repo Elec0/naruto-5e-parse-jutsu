@@ -29,9 +29,9 @@ def run():
         line_json = json.loads(line)
         jutsu = Jutsu(line_json)
 
-        # These are
+        # These are Foundry-specific like, folders or something, so skip them
         if jutsu.rank == "CF_tempEntity":
-            print(line_json)
+            continue
 
         if jutsu.rank not in jutsu_dict["rank"].keys():
             jutsu_dict["rank"][jutsu.rank] = []
@@ -60,6 +60,7 @@ def run():
     #             break
     #
     print(f"Keywords: {' | '.join(jutsu_dict['keywords'])}")
+
     # print(f"Filtered Jutsu: {len(water_jutsu)}")
 
 

@@ -12,13 +12,11 @@ class Jutsu:
     keywords: list[str] = []
 
     REGEX_KEYWORDS = re.compile(r"(Keyword.*?)(?:<br.*?>|\n|</p>)")
-    RELEASE_TYPES = {"mist", "storm", "plasma", "steel", "yang", "dust", "ash", "earth", "lava", "magma", "swift",
-                     "corrosion", "paper", "vapor", "explosion", "poison", "acid", "miasma", "wood", "ink", "steam",
-                     "yin", "sand", "blaze", "fire", "shadow", "magnet", "salt", "mud", "ice", "lightning", "smoke",
-                     "water", "crystal", "bubble", "wind", "scorch", "boil", "sound", "snow", "medical"}
+    RELEASE_TYPES = {"yang", "earth", "paper", "poison", "acid", "ink", "yin", "lightning", "water", "wind"}
     # Keywords that are attached to another keyword
     # Example: "Artistic Style": "Style"
     KEYWORD_POSTFIXES = ["Release", "Style", "Branch"]
+    IGNORED_RANKS = ["CF_tempEntity"]
 
     def __init__(self, db_entry: dict):
         self._db_entry = db_entry
@@ -49,6 +47,7 @@ class Jutsu:
         regex_para = re.compile(r"<p>.*?</p>")
         description = regex_para.sub("", description, count=1)
         description = common.remove_html_tags(description)
+        description = description.strip()
 
         self.description = description
 
@@ -107,6 +106,7 @@ class Jutsu:
         """
         # Don't modify the list we're iterating over
         final_keywords = self.keywords.copy()
+
         for k in self.keywords:
             words = k.split(" ")
             add_last = None
@@ -152,4 +152,10 @@ class Jutsu:
         self.name = self.name.split("[")[0].strip()
 
     def __str__(self):
-        return f"{self.name} ({self.rank}): {self.activation}, Keywords: {', '.join(self.keywords)}, {self.description}"
+        return f"{self.name} ({self.rank}): Cast time: {self.activation}, Keywords: {', '.join(self.keywords)}, " \
+               f"{self.description}"
+
+    def __repr__(self):
+        return f'Jutsu("{self.name}", Rank: "{self.rank}", ' \
+               f'Cast time: "{self.activation["cost"]} {self.activation["type"]}", ' \
+               f'Keywords: {self.keywords})'
