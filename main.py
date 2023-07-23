@@ -1,6 +1,8 @@
 import json
 
+from common import DotDict
 from jutsu import Jutsu
+from jutsu_db import JutsuDB
 
 
 # "name"
@@ -19,11 +21,7 @@ def run():
     with open("jutsu.db", encoding="utf-8") as f:
         db = f.readlines()
 
-    jutsu_dict = {
-        "rank": {},
-        "keywords": set(),
-        "list": []
-    }
+    jutsu_db = JutsuDB()
 
     for line in db:
         line_json = json.loads(line)
@@ -33,28 +31,26 @@ def run():
         if jutsu.rank == "CF_tempEntity":
             continue
 
-        if jutsu.rank not in jutsu_dict["rank"].keys():
-            jutsu_dict["rank"][jutsu.rank] = []
+        if jutsu.rank not in jutsu_db.rank.keys():
+            jutsu_db.rank[jutsu.rank] = []
 
-        jutsu_dict["rank"][jutsu.rank].append(jutsu)
-        jutsu_dict["list"].append(jutsu)
+        jutsu_db.rank[jutsu.rank].append(jutsu)
+        jutsu_db.all_jutsu.append(jutsu)
         # Insert jutsu keywords into the set
-        jutsu_dict["keywords"].update(jutsu.keywords)
+        jutsu_db.all_keywords.update(jutsu.keywords)
 
-    for rank in jutsu_dict["rank"].keys():
-        print(f"{rank}-Rank Jutsu: {len(jutsu_dict['rank'][rank])}")
+    # Assemble some stats for the jutsu
+    for rank in jutsu_db.rank.keys():
+        print(f"{rank}-Rank Jutsu: {len(jutsu_db.rank[rank])}")
 
-    print(f"Total Jutsu: {len(jutsu_dict['list'])}")
+    print(f"Total Jutsu: {len(jutsu_db.all_jutsu)}")
     print()
 
-    # All water jutsu are tagged with "Water Release"
-    # Fire is missing 'release' from some
-
-    print(f"Keywords: {' | '.join(jutsu_dict['keywords'])}")
+    print(f"Keywords: {' | '.join(jutsu_db.all_keywords)}")
 
     print(f"Keyword Jutsu Breakdown")
-    for keyword in jutsu_dict["keywords"]:
-        print(f"{keyword}: {len(filter_keyword(jutsu_dict['list'], keyword))}")
+    for keyword in jutsu_db.all_keywords:
+        print(f"{keyword}: {len(filter_keyword(jutsu_db.all_jutsu, keyword))}")
 
 
 def filter_keyword(jutsu_list: list[Jutsu], keyword: str) -> list[Jutsu]:
