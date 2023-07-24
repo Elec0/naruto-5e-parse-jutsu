@@ -1,6 +1,7 @@
 import json
 
-from common import DotDict
+import output
+from common import DotDict, JutsuRankException
 from jutsu import Jutsu
 from jutsu_db import JutsuDB
 
@@ -25,19 +26,16 @@ def run():
 
     for line in db:
         line_json = json.loads(line)
-        jutsu = Jutsu(line_json)
+        try:
+            jutsu = Jutsu(line_json)
+        except JutsuRankException as ex:
+            continue
 
         # These are Foundry-specific like, folders or something, so skip them
         if jutsu.rank == "CF_tempEntity":
             continue
 
-        if jutsu.rank not in jutsu_db.rank.keys():
-            jutsu_db.rank[jutsu.rank] = []
-
-        jutsu_db.rank[jutsu.rank].append(jutsu)
-        jutsu_db.all_jutsu.append(jutsu)
-        # Insert jutsu keywords into the set
-        jutsu_db.all_keywords.update(jutsu.keywords)
+        jutsu_db.add(jutsu)
 
     # Assemble some stats for the jutsu
     for rank in jutsu_db.rank.keys():
@@ -47,10 +45,13 @@ def run():
     print()
 
     print(f"Keywords: {' | '.join(jutsu_db.all_keywords)}")
+    print()
 
     print(f"Keyword Jutsu Breakdown")
-    for keyword in jutsu_db.all_keywords:
+    for keyword in sorted(list(jutsu_db.all_keywords)):
         print(f"{keyword}: {len(filter_keyword(jutsu_db.all_jutsu, keyword))}")
+
+    print(jutsu_db.get("Chakra Movement").to_yaml())
 
 
 def filter_keyword(jutsu_list: list[Jutsu], keyword: str) -> list[Jutsu]:

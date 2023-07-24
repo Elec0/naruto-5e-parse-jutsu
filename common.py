@@ -1,12 +1,20 @@
 import re
+from collections import UserDict
 from typing import Any
 
 
 def remove_html_tags(text: str) -> str:
-    return re.sub('<[^<]+?>', '', text)
+    """
+    Remove html tags from a string.
+    Keep <br> and <br/> tags, since they are used for line breaks.
+    :param text:
+    :return:
+    """
+    # Remove all tags except <br> and <br/>
+    return re.sub(r"(?!<br.*?>)<.*?>", "", text)
 
 
-class DotDict(dict):
+class DotDict(UserDict):
     """
     A dictionary supporting dot notation.
     """
@@ -17,7 +25,6 @@ class DotDict(dict):
         except KeyError as ex:
             raise AttributeError(key) from ex
 
-    # __getattr__ = dict.get
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
 
@@ -45,3 +52,10 @@ class DotDict(dict):
             else:
                 raise KeyError(key)
         return v
+
+
+class JutsuRankException(Exception):
+    """Raised when a jutsu rank is not valid."""
+
+    def __init__(self, message):
+        super().__init__(message)

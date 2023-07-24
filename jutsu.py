@@ -1,15 +1,19 @@
 import re
 
+import yaml
+
 import common
+from enums import Rank
 
 
 class Jutsu:
     _db_entry: dict
-    rank: str
+    rank: Rank
     name: str
     description: str
     activation: dict
     keywords: list[str] = []
+    _is_valid: bool = True
 
     REGEX_KEYWORDS = re.compile(r"(Keyword.*?)(?:<br.*?>|\n|</p>)")
     RELEASE_TYPES = {"yang", "earth", "paper", "poison", "acid", "ink", "yin", "lightning", "water", "wind"}
@@ -21,6 +25,19 @@ class Jutsu:
     def __init__(self, db_entry: dict):
         self._db_entry = db_entry
         self._parse_db_entry()
+
+    def for_output(self) -> dict:
+        """
+        Return a dict that can be dumped to yaml.
+        :return:
+        """
+        return {
+            "name": self.name,
+            "rank": self.rank,
+            "activation": self.activation,
+            "keywords": self.keywords,
+            "description": self.description
+        }
 
     def _parse_db_entry(self):
         db = self._db_entry
@@ -44,8 +61,8 @@ class Jutsu:
         """
         description = self.description
         # Remove ONLY the 1st <p> to </p> block, using regex replace
-        regex_para = re.compile(r"<p>.*?</p>")
-        description = regex_para.sub("", description, count=1)
+        # we should not remove all the blocks, since some might not be keywords groups
+        description = re.sub(rf"<p>.*?</p>", "", description, count=1)
         description = common.remove_html_tags(description)
         description = description.strip()
 
@@ -147,9 +164,28 @@ class Jutsu:
         return final_keywords
 
     def _parse_rank(self):
-        self.rank = self.name.split("[")[1].split("]")[0].strip()
+        """
+        throws KeyError If the rank is not found in the Rank enum
+        :return:
+        """
+        str_rank = self.name.split("[")[1].split("]")[0].strip()
+        try:
+            self.rank = Rank[str_rank]
+        except KeyError:  # This jutsu should be excluded
+            self._is_valid = False
+            raise common.JutsuRankException(f"Invalid rank: {str_rank}")
         # Remove rank from name
         self.name = self.name.split("[")[0].strip()
+
+    def to_yaml(self) -> str:
+        return yaml.dump(self.for_output(), default_flow_style=False)
+
+    def to_obsidian(self) -> str:
+        res = ""
+        res += "```"
+        res += yaml.dump(self.for_output(), default_flow_style=False)
+        res += "```"
+        return res
 
     def __str__(self):
         return f"{self.name} ({self.rank}): Cast time: {self.activation}, Keywords: {', '.join(self.keywords)}, " \
@@ -159,3 +195,7 @@ class Jutsu:
         return f'Jutsu("{self.name}", Rank: "{self.rank}", ' \
                f'Cast time: "{self.activation["cost"]} {self.activation["type"]}", ' \
                f'Keywords: {self.keywords})'
+
+    @property
+    def is_valid(self):
+        return self._is_valid
