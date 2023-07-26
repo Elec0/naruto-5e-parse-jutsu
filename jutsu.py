@@ -221,9 +221,9 @@ class Jutsu:
 
     def to_obsidian(self) -> str:
         res = ""
-        res += "```\n"
+        res += "---\n"
         res += yaml.dump(self.for_output(), default_flow_style=False)
-        res += "```"
+        res += "---"
         return res
 
     def __str__(self):
