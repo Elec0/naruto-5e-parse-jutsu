@@ -18,7 +18,7 @@ class JutsuDB:
         self.name: dict[str, Jutsu] = {}
 
     def add(self, jutsu: Jutsu):
-        if jutsu.rank.name not in self.rank.keys():
+        if jutsu.rank not in self.rank:
             self.rank[jutsu.rank] = []
 
         # There are some duplicate jutsu names, for casting at different ranks
@@ -27,7 +27,7 @@ class JutsuDB:
             # If the new jutsu is a lower rank, replace the old one
             old_jutsu = self.name[jutsu.name]
 
-            if jutsu.rank > old_jutsu.rank:
+            if jutsu.rank < old_jutsu.rank:
                 print(f"Replacing {old_jutsu.name} [{old_jutsu.rank}] with "
                       f"{jutsu.name} [{jutsu.rank}]")
                 self.rank[old_jutsu.rank].remove(old_jutsu)

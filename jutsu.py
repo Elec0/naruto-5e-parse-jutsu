@@ -33,7 +33,7 @@ class Jutsu:
         """
         return {
             "name": self.name,
-            "rank": self.rank,
+            "rank": str(self.rank),
             "activation": self.activation,
             "keywords": self.keywords,
             "description": self.description

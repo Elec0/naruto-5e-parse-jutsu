@@ -20,3 +20,6 @@ class Rank(Enum):
 
     def __hash__(self):
         return hash(self.value)
+
+    def __str__(self):
+        return self.name

@@ -50,8 +50,6 @@ def run():
     for keyword in sorted(list(jutsu_db.all_keywords)):
         print(f"{keyword}: {len(filter_keyword(jutsu_db.all_jutsu, keyword))}")
 
-    print(jutsu_db.get("Chakra Movement").to_yaml())
-
 
 def filter_keyword(jutsu_list: list[Jutsu], keyword: str) -> list[Jutsu]:
     """
