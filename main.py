@@ -1,4 +1,5 @@
 import json
+import os
 
 from common import JutsuRankException
 from jutsu import Jutsu
@@ -49,6 +50,37 @@ def run():
     print(f"Keyword Jutsu Breakdown")
     for keyword in sorted(list(jutsu_db.all_keywords)):
         print(f"{keyword}: {len(filter_keyword(jutsu_db.all_jutsu, keyword))}")
+
+    print("--- Writing jutsu files ---")
+    output_all_jutsu(jutsu_db)
+
+
+def output_all_jutsu(jutsu_db: JutsuDB):
+    """
+    Write all jutsus to files. One jutsu per file, in a directory structure based on
+    Ninjutsu/Genjutsu/Taijutsu/Bukijutsu, then subdivided by rank.
+
+    Ex::
+
+        - Ninjutsu
+            - A-Rank
+                - Jutsu1.md
+                - Jutsu2.md
+            - B-Rank
+        - Genjutsu
+            - A-Rank
+                - Jutsu1
+            - B-Rank
+    """
+    for jutsu in jutsu_db.all_jutsu:
+        # Create the directory structure
+        path = f"output/{jutsu.category}/{jutsu.rank}"
+        os.makedirs(path, exist_ok=True)
+
+        # Write the jutsu to a file
+        with open(f"{path}/{jutsu.name}.md", "w", encoding="utf-8") as f:
+            f.write(jutsu.to_obsidian())
+        print(f"Wrote '{jutsu.name}.md' to '{path}'")
 
 
 def filter_keyword(jutsu_list: list[Jutsu], keyword: str) -> list[Jutsu]:

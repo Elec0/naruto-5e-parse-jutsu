@@ -13,9 +13,12 @@ class Jutsu:
     description: str
     activation: dict
     keywords: list[str] = []
+    category: str = ""
     _is_valid: bool = True
 
     REGEX_KEYWORDS = re.compile(r"(Keyword.*?)(?:<br.*?>|\n|</p>)")
+    REGEX_ONE_OFF = re.compile(r"^<p>\s</p>\n")
+    CATEGORY_KEYWORDS = ["Ninjutsu", "Genjutsu", "Taijutsu", "Bukijutsu"]
     RELEASE_TYPES = {"yang", "earth", "paper", "poison", "acid", "ink", "yin", "lightning", "water", "wind"}
     # Keywords that are attached to another keyword
     # Example: "Artistic Style": "Style"
@@ -43,15 +46,38 @@ class Jutsu:
         db = self._db_entry
 
         self.name = db["name"]
+        self._cleanup_name()
+
         self._parse_rank()
         self.description = db["system"]["description"]["value"]
 
         if self.description is not None and self.description != "":
+            self._pre_cleanup_description()
             self._keywords_parse()
 
         self.activation = db["system"]["activation"]
 
         self._cleanup_description()
+        self._set_category()
+
+    def _cleanup_name(self):
+        """
+        Format names such that they are valid Path names.
+        """
+        self.name = self.name.replace(":", "-")
+        self.name = self.name.replace("/", "-")
+        replace_chars = ["(", ")", "[", "]", " ", ",", ".", "'", '"', "!", "?"]
+        # Use regex to delete all instances of the characters in replace_chars
+        self.name = re.sub(rf"[{''.join(replace_chars)}]", "", self.name)
+
+    def _pre_cleanup_description(self):
+        """
+        Do specific cleanup before keywords are parsed.
+        """
+        # One-off fix for "Water Escape [D]"
+
+        if re.match(self.REGEX_ONE_OFF, self.description):
+            self.description = re.sub(self.REGEX_ONE_OFF, "", self.description)
 
     def _cleanup_description(self):
         """
@@ -73,7 +99,7 @@ class Jutsu:
         if description == "" or description is None:
             return
 
-        val = re.search(r"(Keywords?:).*?(?:<br.*?>|\n|</p>)", description,
+        val = re.search(r"(Keywords?:|<p>).*?(?:<br.*?>|\n|</p>)", description,
                         re.RegexFlag.MULTILINE | re.RegexFlag.DOTALL)
         if val is None:
             return
@@ -104,6 +130,7 @@ class Jutsu:
         all_keywords = self._keywords_get_all()
         if all_keywords is None:
             return
+
         # Remove the parts we don't want: "Keywords:", "<p>", "</p>", "\n", "<br.*?>", "release"
         keywords_clean = re.sub(r"(Keywords?:|<p>|</p>|\n|<br.*?>|[Rr]elease|\.)", "", all_keywords,
                                 flags=re.RegexFlag.MULTILINE)
@@ -177,12 +204,24 @@ class Jutsu:
         # Remove rank from name
         self.name = self.name.split("[")[0].strip()
 
+    def _set_category(self):
+        """
+        Set the category based on if Ninjutsu/Genjutsu/Taijutsu/Bukijutsu is in the keywords.
+        """
+        for keyword in self.keywords:
+            if keyword in Jutsu.CATEGORY_KEYWORDS:
+                self.category = keyword
+                return
+        # If we fall through, check if it's Hijutsu and use that (Falling Heaven: Focus & Serpent Adaptation)
+        if "Hijutsu" in self.keywords:
+            self.category = "Hijutsu"
+
     def to_yaml(self) -> str:
         return yaml.dump(self.for_output(), default_flow_style=False)
 
     def to_obsidian(self) -> str:
         res = ""
-        res += "```"
+        res += "```\n"
         res += yaml.dump(self.for_output(), default_flow_style=False)
         res += "```"
         return res
