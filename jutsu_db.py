@@ -1,21 +1,21 @@
-from common import DotDict
+from enums import Rank
 from jutsu import Jutsu
 
 
 class JutsuDB:
-    rank: DotDict[Jutsu]
+    rank: dict[Rank, list[Jutsu]]
     """ A dictionary of lists of Jutsu, keyed by rank """
-    name: DotDict[Jutsu]
+    name: dict[str, Jutsu]
     """ A dictionary of lists of Jutsu, keyed by name """
     all_keywords: set[str]
     all_jutsu: list[Jutsu]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.rank: DotDict[list[Jutsu]] = DotDict()
+        self.rank = {}
         self.all_keywords = set()
         self.all_jutsu = []
-        self.name: DotDict[Jutsu] = DotDict()
+        self.name: dict[str, Jutsu] = {}
 
     def add(self, jutsu: Jutsu):
         if jutsu.rank.name not in self.rank.keys():
@@ -26,7 +26,7 @@ class JutsuDB:
         if jutsu.name in self.name.keys():
             # If the new jutsu is a lower rank, replace the old one
             old_jutsu = self.name[jutsu.name]
-            
+
             if jutsu.rank > old_jutsu.rank:
                 print(f"Replacing {old_jutsu.name} [{old_jutsu.rank}] with "
                       f"{jutsu.name} [{jutsu.rank}]")

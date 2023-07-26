@@ -1,7 +1,6 @@
 import json
 
-import output
-from common import DotDict, JutsuRankException
+from common import JutsuRankException
 from jutsu import Jutsu
 from jutsu_db import JutsuDB
 
