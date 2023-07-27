@@ -48,7 +48,12 @@
       "damage": ""
     },
     "damage": {
-      "parts": [],
+      "parts": [
+        [
+          "3d10",
+          "fire"
+        ]
+      ],
       "versatile": ""
     },
     "formula": "",

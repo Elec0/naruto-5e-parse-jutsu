@@ -11,9 +11,23 @@ class Jutsu:
     rank: Rank
     name: str
     description: str
-    activation: dict
     keywords: list[str] = []
     category: str = ""
+    # I don't know what the ["consume"]["type"] means. It's always "attribute", but I see nothing related to that in the
+    # jutsu itself. So we're ignoring it and treating "amount" as the chakra cost.
+    consume: int
+
+    activation: dict
+    duration: dict
+    target: dict
+    range: dict
+    uses: dict
+    ability: dict
+    actionType: str
+    damage: dict
+    save: dict
+    components: dict
+
     _is_valid: bool = True
 
     REGEX_KEYWORDS = re.compile(r"(Keyword.*?)(?:<br.*?>|\n|</p>)")
@@ -24,6 +38,8 @@ class Jutsu:
     # Example: "Artistic Style": "Style"
     KEYWORD_POSTFIXES = ["Release", "Style", "Branch"]
     IGNORED_RANKS = ["CF_tempEntity"]
+    SYSTEM_VARS = ["activation", "duration", "target", "range", "uses", "ability", "actionType", "damage",
+                   "save", "components"]
 
     def __init__(self, db_entry: dict):
         self._db_entry = db_entry
@@ -39,7 +55,18 @@ class Jutsu:
             "rank": str(self.rank),
             "activation": self.activation,
             "keywords": self.keywords,
-            "description": self.description
+            "description": self.description,
+            "category": self.category,
+            "duration": self.duration,
+            "target": self.target,
+            "range": self.range,
+            "uses": self.uses,
+            "consume": self.consume,
+            "ability": self.ability,
+            "action_type": self.actionType,
+            "damage": self.damage,
+            "save": self.save,
+            "components": self.components
         }
 
     def _parse_db_entry(self):
@@ -50,12 +77,15 @@ class Jutsu:
 
         self._parse_rank()
         self.description = db["system"]["description"]["value"]
+        self.consume = db["system"]["consume"]["amount"]
 
         if self.description is not None and self.description != "":
             self._pre_cleanup_description()
             self._keywords_parse()
 
-        self.activation = db["system"]["activation"]
+        for var in self.SYSTEM_VARS:
+            if var in db["system"]:
+                setattr(self, var, db["system"][var])
 
         self._cleanup_description()
         self._set_category()
@@ -78,6 +108,8 @@ class Jutsu:
 
         if re.match(self.REGEX_ONE_OFF, self.description):
             self.description = re.sub(self.REGEX_ONE_OFF, "", self.description)
+
+        self.description = bytes(self.description, "unicode-escape").decode("unicode-escape")
 
     def _cleanup_description(self):
         """
@@ -217,12 +249,12 @@ class Jutsu:
             self.category = "Hijutsu"
 
     def to_yaml(self) -> str:
-        return yaml.dump(self.for_output(), default_flow_style=False)
+        return yaml.dump(self.for_output(), default_flow_style=False, allow_unicode=True)
 
     def to_obsidian(self) -> str:
         res = ""
         res += "---\n"
-        res += yaml.dump(self.for_output(), default_flow_style=False)
+        res += yaml.dump(self.for_output(), default_flow_style=False, allow_unicode=True)
         res += "---"
         return res
 
