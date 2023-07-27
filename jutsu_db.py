@@ -32,6 +32,9 @@ class JutsuDB:
                       f"{jutsu.name} [{jutsu.rank}]")
                 self.rank[old_jutsu.rank].remove(old_jutsu)
                 self.all_jutsu.remove(old_jutsu)
+            else:
+                # If it isn't, then skip adding it all together
+                return
 
         self.name[jutsu.name] = jutsu
         self.rank[jutsu.rank].append(jutsu)
