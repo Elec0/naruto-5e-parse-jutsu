@@ -78,7 +78,7 @@ def output_all_jutsu(jutsu_db: JutsuDB):
         os.makedirs(path, exist_ok=True)
 
         # Write the jutsu to a file
-        with open(f"{path}/{jutsu.name}.md", "w", encoding="utf-8") as f:
+        with open(f"{path}/{jutsu.name_as_path()}.md", "w", encoding="utf-8") as f:
             f.write(jutsu.to_obsidian())
         print(f"Wrote '{jutsu.name}.md' to '{path}'")
 

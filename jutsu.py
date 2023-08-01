@@ -4,6 +4,7 @@ import yaml
 
 import common
 from enums import Rank
+from yaml_formatting import Literal, Quoted
 
 
 class Jutsu:
@@ -37,6 +38,7 @@ class Jutsu:
     # Keywords that are attached to another keyword
     # Example: "Artistic Style": "Style"
     KEYWORD_POSTFIXES = ["Release", "Style", "Branch"]
+    NAME_DECORATORS = ["Release", "Style", "Art"]
     IGNORED_RANKS = ["CF_tempEntity"]
     SYSTEM_VARS = ["activation", "duration", "target", "range", "uses", "ability", "actionType", "damage",
                    "save", "components"]
@@ -51,11 +53,11 @@ class Jutsu:
         :return:
         """
         return {
-            "name": self.name,
+            "name": Quoted(self.name),
             "rank": str(self.rank),
             "activation": self.activation,
             "keywords": self.keywords,
-            "description": self.description,
+            "description": Literal(self.description),
             "category": self.category,
             "duration": self.duration,
             "target": self.target,
@@ -73,7 +75,6 @@ class Jutsu:
         db = self._db_entry
 
         self.name = db["name"]
-        self._cleanup_name()
 
         self._parse_rank()
         self.description = db["system"]["description"]["value"]
@@ -89,16 +90,27 @@ class Jutsu:
 
         self._cleanup_description()
         self._set_category()
+        self._decorate_name()
 
-    def _cleanup_name(self):
+    def name_as_path(self) -> str:
         """
-        Format names such that they are valid Path names.
+        The YAML name of the jutsu does not have to match the filename.
+        :return: Valid path name of the name of the jutsu
         """
-        self.name = self.name.replace(":", "-")
-        self.name = self.name.replace("/", "-")
+        pname = self.name.replace(":", "-")
+        pname = pname.replace("/", "-")
         replace_chars = ["(", ")", "[", "]", " ", ",", ".", "'", '"', "!", "?"]
         # Use regex to delete all instances of the characters in replace_chars
-        self.name = re.sub(rf"[{''.join(replace_chars)}]", "", self.name)
+        return re.sub(rf"[{''.join(replace_chars)}]", "", pname)
+
+    def _decorate_name(self):
+        """
+        Do things like add ":" after "Water/Wind/Swift Release" in the name.
+        :return:
+        """
+        if m := re.match(rf"(^\w+ ({'|'.join(self.NAME_DECORATORS)}))", self.name, re.IGNORECASE):
+            release = " ".join(word.capitalize() for word in m.group(0).split(" "))
+            self.name = f"{release}: {self.name[len(m.group(0)) + 1:]}"
 
     def _pre_cleanup_description(self):
         """
@@ -109,6 +121,7 @@ class Jutsu:
         if re.match(self.REGEX_ONE_OFF, self.description):
             self.description = re.sub(self.REGEX_ONE_OFF, "", self.description)
 
+        # Unicode exists in some text, and when reading it in python it's escaped, so we need to unescape it.
         self.description = bytes(self.description, "unicode-escape").decode("unicode-escape")
 
     def _cleanup_description(self):
