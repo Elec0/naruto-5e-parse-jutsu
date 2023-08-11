@@ -134,6 +134,8 @@ class Jutsu:
         # Remove ONLY the 1st <p> to </p> block, using regex replace
         # we should not remove all the blocks, since some might not be keywords groups
         description = re.sub(rf"<p>.*?</p>", "", description, count=1)
+        # Replace bullet point characters with dashes
+        description = re.sub(r"•", "-", description)
         description = common.remove_html_tags(description)
         description = description.strip()
 
