@@ -272,7 +272,7 @@ class Jutsu:
         res += yaml.dump(self.for_output(), default_flow_style=False, allow_unicode=True)
         res += "---\n"
         render_block = ("```dataviewjs\n"
-                        "const {RenderJutsu} = customJS)\n"
+                        "const {RenderJutsu} = customJS\n"
                         "RenderJutsu.renderBlock(dv, dv.current())\n"
                         "```\n")
         res += render_block
